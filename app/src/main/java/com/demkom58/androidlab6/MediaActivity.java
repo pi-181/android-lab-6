@@ -1,6 +1,10 @@
 package com.demkom58.androidlab6;
 
+import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.SurfaceView;
@@ -12,8 +16,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
+import java.net.URL;
+
 public class MediaActivity extends AppCompatActivity
         implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
+    private static final String TAG = "MediaActivity";
 
     MediaPlayer mediaPlayer;
     SurfaceView surfaceView;
@@ -34,11 +41,14 @@ public class MediaActivity extends AppCompatActivity
             }
         });
 
+        if (android.os.Build.VERSION.SDK_INT > 9)
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitAll().build());
+
         View.OnClickListener btnClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("myLogs", String.valueOf(v.getId()));
-                onClick(v);
+                MediaActivity.this.onClick(v);
             }
         };
         findViewById(R.id.bPause).setOnClickListener(btnClick);
@@ -54,12 +64,19 @@ public class MediaActivity extends AppCompatActivity
         releaseMP();
         String dataSource =((EditText)findViewById(R.id.fieldMediaPath)).getText().toString();
         try {
+            setVolumeControlStream(AudioManager.STREAM_MUSIC);
             mediaPlayer = new MediaPlayer();
+            mediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build());
             mediaPlayer.setDataSource(dataSource);
             mediaPlayer.setDisplay(((SurfaceView) findViewById(R.id.surfaceMediaView)).getHolder());
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.prepareAsync();
         } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(TAG, "onClickStart X");
             showMessage("Ошибка воспроизведения");
         }
 
