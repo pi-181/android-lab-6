@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
-                android:text="URL"
+                android:text="https://www.dropbox.com/s/s121gec6rl64i46/Bah-Rondeau.mp3?dl=1"
                 android:ems="10"
                 android:id="@+id/fieldMediaPath"
                 app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toTopOf="@+id/bPause"
