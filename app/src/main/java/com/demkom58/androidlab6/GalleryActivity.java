@@ -1,7 +1,9 @@
 package com.demkom58.androidlab6;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -38,12 +40,12 @@ public class GalleryActivity extends AppCompatActivity {
         images = new ArrayList<>();
 
         imageView = findViewById(R.id.imageView);
+        File imagesDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         try {
-            File imagesDirectory = new File("/sdcard/TrainingMedia/");
             images = searchImage(imagesDirectory);
             updatePhoto(Uri.parse(images.get(currentImage)));
         } catch (Exception e) {
-            nameView.setText("Ошибка: Папка '/sdcard/TrainingMedia/' не найдена");
+            nameView.setText("Ошибка: Папка '" + imagesDirectory.getPath() + "' не найдена");
             Log.d("myLogs", "Ошибка");
         }
 
